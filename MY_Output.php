@@ -27,7 +27,7 @@
  * @category            Output
  * @author		Dan Murfitt
  * @link		http://twitter.com/danmurf
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License (GPLv3)
+ * @license             http://opensource.org/licenses/gpl-license.php GNU Public License (GPLv3)
  */
 class MY_Output extends CI_Output {
     
@@ -38,16 +38,42 @@ class MY_Output extends CI_Output {
      */
     public function clear_path_cache($uri)
     {
+        $CI =& get_instance();
+	$path = $CI->config->item('cache_path');
         
+        $cache_path = ($path == '') ? APPPATH.'cache/' : $path;
+        
+        $uri =	$CI->config->item('base_url').
+		$CI->config->item('index_page').
+		$CI->uri->uri_string();
+
+	$cache_path .= md5($uri);
+        
+        return unlink($cache_path);
     }
     
     /**
      * Clears all cache from the cache directory
-     * @return boolean TRUE if successful, FALSE if not 
      */
     public function clear_all_cache()
     {
+        $CI =& get_instance();
+	$path = $CI->config->item('cache_path');
         
+        $cache_path = ($path == '') ? APPPATH.'cache/' : $path;
+        
+        $handle = opendir($path);
+
+        while (($file = readdir($handle))!== FALSE) 
+        {
+            //Leave the directory protection alone
+            if ($file != '.htaccess' && $file != 'index.html')
+            {
+               unlink($dir.'/'.$file);
+            }
+        }
+
+        closedir($handle);
     }
     
     /**
