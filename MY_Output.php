@@ -45,11 +45,11 @@ class MY_Output extends CI_Output {
         
         $uri =	$CI->config->item('base_url').
 		$CI->config->item('index_page').
-		$CI->uri->uri_string();
+		$uri;
 
 	$cache_path .= md5($uri);
         
-        return unlink($cache_path);
+        return @unlink($cache_path);
     }
     
     /**
@@ -62,14 +62,14 @@ class MY_Output extends CI_Output {
         
         $cache_path = ($path == '') ? APPPATH.'cache/' : $path;
         
-        $handle = opendir($path);
+        $handle = opendir($cache_path);
 
         while (($file = readdir($handle))!== FALSE) 
         {
             //Leave the directory protection alone
             if ($file != '.htaccess' && $file != 'index.html')
             {
-               unlink($dir.'/'.$file);
+               @unlink($cache_path.'/'.$file);
             }
         }
 
