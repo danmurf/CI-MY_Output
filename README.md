@@ -5,7 +5,7 @@ This file extends the functionality of CodeIgniter's core output library. This h
 
 ##Installation
 
-Copy the MY_Output.php to your `application/core` folder. Assuming your config is still set to use the default 'MY_' prefix for library extensions, the library will be automatically loaded. If not, you will need to amend the MY_Output.php file name and class name appropriately.
+Copy the `MY_Output.php` file to your `application/core` folder. Assuming your config is still set to use the default 'MY_' prefix for library extensions, the library will be automatically loaded. If not, you will need to amend the MY_Output.php file name and class name appropriately.
 
 ##Clearing a cached path
 
@@ -35,4 +35,4 @@ You can check to see when a cache file is set to expire by using:
 
     $this->output->get_path_cache_expiration($uri);
 
-This will return the unix timestamp of the expiration or `FALSE` if the cache file does not exist.
+This will return the unix timestamp (as an `int`) of the expiration or `FALSE` if the cache file does not exist.
