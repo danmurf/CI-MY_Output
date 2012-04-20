@@ -138,7 +138,7 @@ class MY_Output extends CI_Output {
         }
         
         //Return the timestamp
-        return trim(str_replace('TS--->', '', $match['1']));
+        return (int)trim(str_replace('TS--->', '', $match['1']));
     }
 }
 
