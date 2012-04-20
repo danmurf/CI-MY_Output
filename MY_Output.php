@@ -83,7 +83,18 @@ class MY_Output extends CI_Output {
      */
     public function path_cached($uri)
     {
+        $CI =& get_instance();
+	$path = $CI->config->item('cache_path');
         
+        $cache_path = ($path == '') ? APPPATH.'cache/' : $path;
+        
+        $uri =	$CI->config->item('base_url').
+		$CI->config->item('index_page').
+		$uri;
+
+	$cache_path .= md5($uri);
+        
+        return file_exists($cache_path);
     }
     
     /**
@@ -93,7 +104,41 @@ class MY_Output extends CI_Output {
      */
     public function get_path_cache_expiration($uri)
     {
+        $CI =& get_instance();
+	$path = $CI->config->item('cache_path');
         
+        $cache_path = ($path == '') ? APPPATH.'cache/' : $path;
+        
+        $uri =	$CI->config->item('base_url').
+		$CI->config->item('index_page').
+		$uri;
+
+	$cache_path .= md5($uri);
+        
+        if (!$fp = @fopen($cache_path, FOPEN_READ))
+        {
+            return FALSE;
+        }
+        
+        flock($fp, LOCK_SH);
+
+        $cache = '';
+        if (filesize($cache_path) > 0)
+        {
+            $cache = fread($fp, filesize($cache_path));
+        }
+
+        flock($fp, LOCK_UN);
+        fclose($fp);
+
+        //Strip out the embedded timestamp
+        if (!preg_match("/(\d+TS--->)/", $cache, $match))
+        {
+            return FALSE;
+        }
+        
+        //Return the timestamp
+        return trim(str_replace('TS--->', '', $match['1']));
     }
 }
 
